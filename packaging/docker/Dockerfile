@@ -38,7 +38,9 @@ WORKDIR /opt/vaultier
 RUN useradd -d /opt/vaultier -s /bin/bash vaultier && \
     chown vaultier:www-data /var/run/uwsgi/app/vaultier
 COPY Vaultier-latest.tar.gz /opt/vaultier/Vaultier-latest.tar.gz
-RUN virtualenv venv && /opt/vaultier/venv/bin/pip install Vaultier-latest.tar.gz && rm /opt/vaultier/Vaultier-latest.tar.gz
+# RUN virtualenv venv && /opt/vaultier/venv/bin/pip install Vaultier-latest.tar.gz && rm /opt/vaultier/Vaultier-latest.tar.gz
+RUN virtualenv venv && /opt/vaultier/venv/bin/pip install git+https://github.com/edgimar/vaultier@HEAD && rm /opt/vaultier/Vaultier-latest.tar.gz
+
 ENV PYTHONPATH /opt/vaultier/venv/lib/python2.7/site-packages/vaultier
 RUN /etc/init.d/postgresql start && /opt/vaultier/venv/bin/vaultier init --managed && \
     /opt/vaultier/venv/bin/vaultier setup --no_statistics && \

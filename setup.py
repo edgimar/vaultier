@@ -66,6 +66,6 @@ setup(
                      "own needs and was designed to solve our problem to "
                      "collaborate on hundreds of login credentials with the "
                      "proper level of security and access control.",
-    version="1.0.0",
+    #version="1.0.0",
     url="https://www.vaultier.org"
 )
