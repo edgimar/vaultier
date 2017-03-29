@@ -46,7 +46,10 @@ RUN cd /tmp/gitrepo/vaultier && python setup.py sdist
 RUN cd /opt/vaultier && virtualenv venv && /opt/vaultier/venv/bin/pip install /tmp/gitrepo/vaultier/dist/Vaultier-0.0.0.tar.gz
 #RUN rm -rf /tmp/gitrepo
 
+#RUN ls -l /opt/vaultier/venv/lib/python2.7/site-packages/vaultier
 ENV PYTHONPATH /opt/vaultier/venv/lib/python2.7/site-packages/vaultier
+RUN mkdir -p /opt/vaultier/venv/lib/python2.7/site-packages/vaultier/vaultier/scripts/dist
+RUN chown -R vaultier:vaultier /opt/vaultier
 RUN /etc/init.d/postgresql start && /opt/vaultier/venv/bin/vaultier init --managed && \
     /opt/vaultier/venv/bin/vaultier setup --no_statistics && \
     chown -R vaultier:vaultier /opt/vaultier
