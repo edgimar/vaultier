@@ -2,7 +2,7 @@
 
 # Base this on Ubuntu LTS
 FROM ubuntu:14.04
-MAINTAINER info@rclick.cz
+MAINTAINER edgimar@gmail.com
 
 # Set locales
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales && \
@@ -16,8 +16,8 @@ ENV LC_ALL en_US.UTF-8
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-server-dev-9.3 \
-    python-virtualenv python-dev git \
-    nginx \
+    python-virtualenv python-dev \
+    git nginx \
     uwsgi uwsgi-plugin-python \
     supervisor && \
     apt-get clean -y && \
@@ -38,8 +38,13 @@ WORKDIR /opt/vaultier
 RUN useradd -d /opt/vaultier -s /bin/bash vaultier && \
     chown vaultier:www-data /var/run/uwsgi/app/vaultier
 #COPY Vaultier-latest.tar.gz /opt/vaultier/Vaultier-latest.tar.gz
-# RUN virtualenv venv && /opt/vaultier/venv/bin/pip install Vaultier-latest.tar.gz && rm /opt/vaultier/Vaultier-latest.tar.gz
-RUN virtualenv venv && /opt/vaultier/venv/bin/pip install git+https://github.com/edgimar/vaultier@HEAD 
+RUN pwd
+RUN mkdir /tmp/gitrepo && cd /tmp/gitrepo && git clone --depth=1 https://github.com/edgimar/vaultier 
+RUN cd /tmp/gitrepo/vaultier && python setup.py sdist
+# RUN virtualenv venv && /opt/vaultier/venv/bin/pip install Vaultier-latest.tar.gz && rm /opt/vaultier/Vaultier-latest.tar.gz 
+#RUN virtualenv venv && /opt/vaultier/venv/bin/pip install git+https://github.com/edgimar/vaultier@HEAD 
+RUN cd /opt/vaultier && virtualenv venv && /opt/vaultier/venv/bin/pip install /tmp/gitrepo/vaultier/dist/Vaultier-0.0.0.tar.gz
+#RUN rm -rf /tmp/gitrepo
 
 ENV PYTHONPATH /opt/vaultier/venv/lib/python2.7/site-packages/vaultier
 RUN /etc/init.d/postgresql start && /opt/vaultier/venv/bin/vaultier init --managed && \
