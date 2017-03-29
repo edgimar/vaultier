@@ -18,7 +18,7 @@ setup(
         'psycopg2==2.5.1',
         'pycrypto==2.6.1',
         'pynliner==0.5.0',
-        'six==1.4.1',
+        'six==1.9',
         'wsgiref==0.1.2',
         'raven==5.0.0',
         'pytz==2014.7',

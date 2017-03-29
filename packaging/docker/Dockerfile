@@ -16,7 +16,7 @@ ENV LC_ALL en_US.UTF-8
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-server-dev-9.3 \
-    python-virtualenv python-dev \
+    python-virtualenv python-dev git \
     nginx \
     uwsgi uwsgi-plugin-python \
     supervisor && \
@@ -37,9 +37,9 @@ RUN mkdir -p /opt/vaultier/logs && mkdir -p /var/run/uwsgi/app/vaultier
 WORKDIR /opt/vaultier
 RUN useradd -d /opt/vaultier -s /bin/bash vaultier && \
     chown vaultier:www-data /var/run/uwsgi/app/vaultier
-COPY Vaultier-latest.tar.gz /opt/vaultier/Vaultier-latest.tar.gz
+#COPY Vaultier-latest.tar.gz /opt/vaultier/Vaultier-latest.tar.gz
 # RUN virtualenv venv && /opt/vaultier/venv/bin/pip install Vaultier-latest.tar.gz && rm /opt/vaultier/Vaultier-latest.tar.gz
-RUN virtualenv venv && /opt/vaultier/venv/bin/pip install git+https://github.com/edgimar/vaultier@HEAD && rm /opt/vaultier/Vaultier-latest.tar.gz
+RUN virtualenv venv && /opt/vaultier/venv/bin/pip install git+https://github.com/edgimar/vaultier@HEAD 
 
 ENV PYTHONPATH /opt/vaultier/venv/lib/python2.7/site-packages/vaultier
 RUN /etc/init.d/postgresql start && /opt/vaultier/venv/bin/vaultier init --managed && \
@@ -62,5 +62,5 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 VOLUME ["/var/log", "/var/lib/postgresql", "/opt/vaultier/logs", "/opt/vaultier/data"]
 
 # Run supervisord on startup. Do not run with sh -c, so that SIGTERM works
-# on docker stop <conatiner>
+# on docker stop <container>
 ENTRYPOINT ["/usr/bin/supervisord"]
