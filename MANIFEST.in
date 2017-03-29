@@ -3,4 +3,3 @@ recursive-include cfg *
 recursive-exclude vaultier *.pyc
 recursive-exclude vaultier/vaultier/media *
 recursive-exclude vaultier/vaultier/scripts *
-recursive-include vaultier/vaultier/scripts/dist *
